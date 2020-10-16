@@ -29,7 +29,8 @@ The company is looking to add a LOT of new discounts of various types and many n
 
 Refactor the code so that it can better tackle these changes, and prove your work by implementing: 
 * a JSON receipt
-* a flat amount discount (say kr 100) on the Order level
+* a 50% discount when buying 10 or more of a product
+* a flat amount discount (say kr 100)
 
 You are free to break any existing dependencies in order to make the changes you want.
 
