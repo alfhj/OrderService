@@ -25,12 +25,13 @@ Note: The PDF receipt service can only generate a single receipt at a time and m
 The accompanying OrderService solution contains some classes used by an imaginary service to generate order receipts and some unit tests to prove that everything works.  
 
 We want you to make the system more extensible.  
-The company is looking to add a LOT of new discounts of various types and many new receipt formats in the future.  
+The company wants to be able to add a LOT of new products, discounts of various types and receipt formats in the future.  
 
 Refactor the code so that it can better tackle these changes, and prove your work by implementing: 
 * a JSON receipt
 * a 50% discount when buying 10 or more of a product
 * a flat amount discount (say kr 100)
+* a new disability insurance product that costs 1000
 
 You are free to break any existing dependencies in order to make the changes you want.
 
