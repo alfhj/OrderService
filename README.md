@@ -27,7 +27,7 @@ The accompanying OrderService solution contains some classes used by an imaginar
 We want you to make the system more extensible.  
 The company wants to be able to add a LOT of new products, discounts of various types and receipt formats in the future.  
 
-Refactor the code so that it can better tackle these changes, and prove your work by implementing: 
+Refactor the code so that it can better tackle these changes, and prove your work by adding: 
 * a JSON receipt
 * a 50% discount when buying 10 or more of a product
 * a flat amount discount (say kr 100)
