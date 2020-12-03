@@ -5,4 +5,13 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="DiscountRules\100KronerDiscount.cs" />
+    <Compile Remove="DiscountRules\TenPercent.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="DiscountRules\NewFile1.txt" />
+  </ItemGroup>
+
 </Project>
