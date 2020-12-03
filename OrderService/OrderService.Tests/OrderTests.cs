@@ -1,6 +1,6 @@
 using System.Globalization;
-using System.Reflection;
 using NUnit.Framework;
+using OrderService.DiscountRules;
 using OrderService.Receipts;
 
 namespace OrderService.Tests
@@ -14,7 +14,7 @@ namespace OrderService.Tests
 
 
         [Test]
-        public void can_generate_html_receipt_for_motor_basic()
+        public void Can_generate_html_receipt_for_motor_basic()
         {
             var order = new Order("Test Company");
             order.AddLine(new OrderLine(MotorBasic, 1, 0));
@@ -27,7 +27,7 @@ namespace OrderService.Tests
         }
 
         [Test]
-        public void can_generate_html_receipt_for_motor_super()
+        public void Can_generate_html_receipt_for_motor_super()
         {
             var order = new Order("Test Company");
             order.AddLine(new OrderLine(MotorSuper, 1, 0));
@@ -40,7 +40,7 @@ namespace OrderService.Tests
         }
 
         [Test]
-        public void can_generate_receipt_for_motor_basic()
+        public void Can_generate_receipt_for_motor_basic()
         {
             var order = new Order("Test Company");
             order.AddLine(new OrderLine(MotorBasic, 1, 0));
@@ -52,7 +52,7 @@ namespace OrderService.Tests
         }
 
         [Test]
-        public void can_generate_receipt_for_motor_super()
+        public void Can_generate_receipt_for_motor_super()
         {
             var order = new Order("Test Company");
             order.AddLine(new OrderLine(MotorSuper, 1, 0));
@@ -64,23 +64,61 @@ namespace OrderService.Tests
         }
 
         [Test]
-        public void can_generate_json_receipt_for_motor_basic()
+        public void Can_generate_json_receipt_for_motor_basic()
         {
             var order = new Order("Test Company");
             order.AddLine(new OrderLine(MotorBasic, 1, 0));
             var actual = new JsonReceipt(order).ToString();
-            var expected = @"{
-    \"Company\": \"Test Company\"" +
-    \"OrderLines\": [" +
-                "            \"1 x Car Insurance Basic = kr 1{NumberFormatInfo.CurrentInfo.NumberGroupSeparator}000,00\r\nSubtotal: kr 1{NumberFormatInfo.CurrentInfo.NumberGroupSeparator}000,00\r\nMVA: kr 250,00\r\nTotal: kr 1{NumberFormatInfo.CurrentInfo.NumberGroupSeparator}250,00";
+            var expected = "{\"Company\":\"Test Company\",\"OrderLines\":[{\"Quantity\":1,\"ProductType\":\"Car Insurance\",\"ProductName\":\"Basic\",\"TotalPrice\":1000}],\"Subtotal\":1000,\"MVA\":250,\"Total\":1250}";
 
             Assert.AreEqual(expected, actual);
         }
 
+        [Test]
+        public void Can_generate_json_receipt_for_motor_super()
+        {
+            var order = new Order("Test Company");
+            order.AddLine(new OrderLine(MotorSuper, 1, 0));
+            var actual = new JsonReceipt(order).ToString();
+            var expected = "{\"Company\":\"Test Company\",\"OrderLines\":[{\"Quantity\":1,\"ProductType\":\"Car Insurance\",\"ProductName\":\"Super\",\"TotalPrice\":2000}],\"Subtotal\":2000,\"MVA\":500,\"Total\":2500}";
+
+            Assert.AreEqual(expected, actual);
+        }
 
         [Test]
-        [TestCase(new OrderLine(MotorBasic, 1, 0)), 1000)]
-)]
-        public void TestDiscountPrice(OrderLine orderLine, decimal expectedPrice)
+        [TestCase(1, 1000, 100, 900)]
+        [TestCase(1, 2000, 100, 1900)]
+        [TestCase(2, 1000, 0, 2000)]
+        [TestCase(10, 1000, 0, 9000)]
+        [TestCase(11, 1000, 0, 5500)]
+        [TestCase(2, 2000, 0, 4000)]
+        [TestCase(10, 2000, 0, 18000)]
+        [TestCase(11, 2000, 0, 11000)]
+        public void TestDiscountPrice(int quantity, decimal price, int discount, decimal discountedPrice)
+        {
+            var engine = new DiscountEngine.Builder()
+                .WithHundreKroner()
+                .TenPercent()
+                .TwentyPercent()
+                .FiftyPercent()
+                .Build();
+
+            var expected = discountedPrice;
+            decimal actual = 0;
+            Product TestProduct = new Product("Test Insurance", "Test", price);
+            var order = new Order("Test Company");
+            order.AddLine(new OrderLine(TestProduct, quantity, discount));
+
+
+
+            foreach (var line in order.OrderLines)
+            {
+                actual += line.TotalPrice;
+                engine.ApplyDiscount(line);
+            }
+
+
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

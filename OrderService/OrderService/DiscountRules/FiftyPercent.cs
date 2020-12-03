@@ -9,7 +9,7 @@
 
         public override bool IsMatch(OrderLine orderLine)
         {
-            return orderLine.Quantity >= 10;
+            return orderLine.Quantity > 10;
         }
     }
 }

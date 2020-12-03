@@ -8,7 +8,7 @@ namespace OrderService
 
         public decimal TotalPrice { get; set; }
         public Product Product { get; }
-        public decimal Quantity { get; }
+        public int Quantity { get; }
         public int Discount { get; }
 
         public OrderLine(Product product, int quantity, int discount)
