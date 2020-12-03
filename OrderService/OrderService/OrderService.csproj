@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Remove="DiscountRules\100KronerDiscount.cs" />
     <Compile Remove="DiscountRules\TenPercent.cs" />
+    <Compile Remove="DiscountRules\TwentyPercent.cs" />
   </ItemGroup>
 
   <ItemGroup>

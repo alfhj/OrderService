@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace OrderService.DiscountRules
 {
@@ -11,32 +12,47 @@ namespace OrderService.DiscountRules
             _rules = rules;
         }
 
-        public void ApplyDiscount(Product product)
+        public void ApplyDiscount(OrderLine orderLine)
         {
-            foreach (var rule in _rules)
-            {
-                if (rule.IsMatch(product))
-                {
-                    rule.UpdatePrice(product);
-                    break;
-                }
-            }
+            var newPrice = _rules
+                .Where(rule => rule.IsMatch(orderLine))
+                .Min(rule => rule.CalculateDiscount(orderLine));
+
+            orderLine.TotalPrice = newPrice;
         }
 
         public class Builder
         {
-            private IList<BaseDiscount> _discounts = new List<BaseDiscount>();
+            private readonly IList<BaseDiscount> _discounts = new List<BaseDiscount>();
 
             public Builder WithHundreKroner()
             {
-                _discounts.Add(new HundreKronerDiscount());
+                _discounts.Add(new HoundredKronerDiscount());
                 return this;
             }
 
-            public RuleEngineBuilder Build()
+            public Builder TenPercent()
             {
-                _builderRules.Add(new NoDiscount());
-                return new RuleEngineBuilder(_discounts);
+                _discounts.Add(new TenPercentWhenPriceIsThousand());
+                return this;
+            }
+
+            public Builder TwentyPercent()
+            {
+                _discounts.Add(new TwentyPercentWhenPriceIsTwoThousand());
+                return this;
+            }
+
+            public Builder FiftyPercent()
+            {
+                _discounts.Add(new FiftyPercent());
+                return this;
+            }
+
+            public DiscountEngine Build()
+            {
+                _discounts.Add(new NoDiscount());
+                return new DiscountEngine(_discounts);
             }
         }
     }

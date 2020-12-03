@@ -1,0 +1,12 @@
+﻿{
+    "Company": "Test Company",
+    "OrderLines": [
+        {
+            "Quantity": 1,
+            "ProductName": "Car Insurance Super"
+        }
+    ]
+    "Subtotal": 2000,00,
+    "MVA": 2000,00,
+    "Total": 2500,00
+}

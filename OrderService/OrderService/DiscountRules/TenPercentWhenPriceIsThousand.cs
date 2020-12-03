@@ -1,18 +1,16 @@
 ﻿namespace OrderService.DiscountRules
 {
-    public class TenPercent : BaseDiscount
+    public class TenPercentWhenPriceIsThousand : BaseDiscount
     {
-        public override void ApplyDiscount(OrderLine orderLine)
+        public override decimal CalculateDiscount(OrderLine orderLine)
         {
-            orderLine.TotalPrice * 0.9M;
+            return orderLine.TotalPrice * .9M;
         }
 
         public override bool IsMatch(OrderLine orderLine)
         {
-            if (orderLine.Quan = 100)
-            {
-                return true;
-            }
+            return orderLine.Quantity >= 5 && orderLine.Product.Price == Product.Prices.OneThousand;
+
         }
     }
 }

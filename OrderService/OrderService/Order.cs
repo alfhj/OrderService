@@ -1,28 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
+using OrderService.DiscountRules;
 
 namespace OrderService
 {
-    // receipt klasse - sende inn order
-    // Receipt factory
-    // Slå sammen receipt generering
-    // Decimal price
     // fjerne Prices klasse?
     // produkt type
 
-
     public class Order
     {
-        private readonly DiscountEngine discountEngine;
+        private readonly DiscountEngine _discountEngine;
         private readonly IList<OrderLine> _orderLines = new List<OrderLine>();
         public IEnumerable<OrderLine> OrderLines => _orderLines;
 
         public Order(string company)
         {
-            discountEngine = new DiscountEngine.Builder()
-                .HundreKronerDiscount();
+            _discountEngine = new DiscountEngine.Builder()
+                .WithHundreKroner()
+                .TenPercent()
+                .TwentyPercent()
+                .FiftyPercent()
+                .Build();
+
             Company = company;
         }
 
@@ -30,7 +28,7 @@ namespace OrderService
 
         public void AddLine(OrderLine orderLine)
         {
-            discountEngine.ApplyDiscound(orderLine);
+            _discountEngine.ApplyDiscount(orderLine);
             _orderLines.Add(orderLine);
         }
     }

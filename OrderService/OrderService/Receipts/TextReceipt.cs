@@ -1,21 +1,20 @@
-﻿using System.Linq;
-
-namespace OrderService.Receipts
+﻿namespace OrderService.Receipts
 {
     public class TextReceipt : Receipt
     {
         public TextReceipt(Order order) : base(order)
         {
+            GenerateReceipt();
         }
 
-        public override void GenerateReceipt()
+        public sealed override void GenerateReceipt()
         {
             Builder.AppendLine($"Order receipt for '{Order.Company}'");
-            Builder.AppendLine();
 
-            Order.OrderLines.Select(orderLine
-                => Builder.AppendLine(
-                    $"\t{orderLine.Quantity} x {orderLine.Product.ProductType} {orderLine.Product.ProductName} = {orderLine.TotalPrice:C}"));
+            foreach (var orderLine in Order.OrderLines)
+            {
+                Builder.AppendLine($"\t{orderLine.Quantity} x {orderLine.Product.ProductType} {orderLine.Product.ProductName} = {orderLine.TotalPrice:C}");
+            }
 
             Builder.AppendLine($"Subtotal: {Subtotal:C}");
             Builder.AppendLine($"MVA: {Tax:C}");

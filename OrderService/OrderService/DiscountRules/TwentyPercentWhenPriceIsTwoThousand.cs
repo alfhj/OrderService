@@ -1,15 +1,15 @@
 ﻿namespace OrderService.DiscountRules
 {
-    public class NoDiscount : BaseDiscount
+    public class TwentyPercentWhenPriceIsTwoThousand : BaseDiscount
     {
         public override decimal CalculateDiscount(OrderLine orderLine)
         {
-            return orderLine.TotalPrice;
+            return orderLine.TotalPrice * .9M;
         }
 
         public override bool IsMatch(OrderLine orderLine)
         {
-            return true;
+            return (orderLine.Quantity >= 3 && orderLine.Product.Price == Product.Prices.TwoThousand);
         }
     }
 }

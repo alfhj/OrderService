@@ -2,17 +2,14 @@
 {
     public class HoundredKronerDiscount : BaseDiscount
     {
-        public override void ApplyDiscount(OrderLine orderLine)
+        public override decimal CalculateDiscount(OrderLine orderLine)
         {
-            orderLine.TotalPrice -= 100;
+            return orderLine.TotalPrice - 100;
         }
 
         public override bool IsMatch(OrderLine orderLine)
         {
-            if (orderLine.Discount = 100)
-            {
-                return true;
-            }
+            return orderLine.Discount == 100;
         }
     }
 }
